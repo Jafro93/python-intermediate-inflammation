@@ -94,5 +94,13 @@ def test_patient_normalise(test, expected, raises):
     else:
         npt.assert_almost_equal(patient_normalise(np.array(test)), np.array(expected), decimal=2)
 
+def test_random_numpy():
+    mean = 5
+    stdev = 3
+    sample_size = 1000000
 
+    sample = np.random.normal(mean, stdev, sample_size)
+
+    np.testing.assert_almost_equal(mean, np.mean(sample), decimal=2)
+    np.testing.assert_almost_equal(stdev, np.std(sample), decimal=2)
 # TODO(lesson-robust) Implement tests for the other statistical functions

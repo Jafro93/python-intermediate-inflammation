@@ -7,6 +7,8 @@ inflammation data for a single patient taken over a number of days
 and each column represents a single day across all patients.
 """
 
+from ast import Index
+from pydoc import Doc
 import numpy as np
 
 
@@ -70,6 +72,74 @@ def patient_normalise(data):
     normalised[normalised < 0] = 0
     return normalised
 
+
+class Observation:
+    def __init__(self, day, value):
+        self.day = day
+        self.value = value
+
+    def __str__(self):
+        return str(self.value)
+
+class Person:
+    def __init__(self, name):
+        self.name = name
+
+    def __str__(self):
+        return self.name
+
+class Doctor(Person):
+    def __init__(self, name):
+        super().__init__(name)
+        self.patients = []
+
+    def add_patient(self, patient):
+        self.patients.append(patient.name)
+    
+    @property
+    def get_patients(self):
+        return self.patients
+
+class Patient(Person):
+    """A patient in an inflammation study."""
+    def __init__(self, name, observations=None):
+        super().__init__(name)
+        
+        self.observations = []
+
+        if observations is not None:
+            self.observations = observations
+
+    def add_observation(self, value, day=None):
+        if day is None:
+            try:
+                day = self.observations[-1].day + 1
+
+            except IndexError:
+                day = 0
+
+        new_observation = Observation(day, value)
+
+        self.observations.append(new_observation)
+        return new_observation
+
+    @property
+    def last_observation(self):
+        return self.observations[-1]
+
+
+alice = Patient('Alice')
+print(alice)
+
+obs = alice.add_observation(3)
+print(obs)
+
+doctor = Doctor('Bob')
+print(doctor)
+
+doctor.add_patient(alice)
+patients = doctor.get_patients
+print(patients)
 
 # TODO(lesson-design) Add Patient class
 # TODO(lesson-design) Implement data persistence
